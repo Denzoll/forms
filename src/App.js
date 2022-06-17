@@ -5,30 +5,40 @@ function App() {
   const [text, SetText] = useState("");
   const [Empty, setEmpty] = useState(true);
   const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(false);
 
   const handleBlur = (e) => {
     if(!text) {
-      setError("полe ввода не должно быть пустым")
+      setMessage(false)
+      setError("Полe ввода не должно быть пустым")
     }
   };
 
   const handleSetText = (e) => {
     SetText(e.target.value);
-    if (text) {
-      setEmpty(false);
-      setError("сообщение отправлено ");
+    if (e.target.value) {
+      setEmpty(false)
+      setError("")
+      setMessage(true)
+    }
+    if (!e.target.value) {
+      setEmpty(true)
+      setMessage(false)
+      setError("Поле ввода не должно быть пустым")
     }
   };
+
+
   const handleSubmit = (e) => {
-    e.preventDefault();
     console.log(text);
+    setError("Отправлено")
     SetText("");
     setEmpty(true);
+    setMessage(true)
   };
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form  onClick={(e) => e.preventDefault()}>
         <input
           
           type="text"
@@ -36,10 +46,10 @@ function App() {
           onChange={handleSetText}
           onBlur={(e) => handleBlur(e)}
         />
-        <button type="submit" disabled={Empty}>
+        <button onClick={e => handleSubmit()} type="submit" disabled={Empty}>
           Отправить
         </button>
-        {error && Empty && <div style={{ color: "red" }}>{error}</div>}
+        {error && Empty && <div className={message === false ? 'is-error' : 'no-error'}>{error}</div>}
         
       </form>
     </>
